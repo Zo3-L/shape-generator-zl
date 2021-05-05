@@ -44,13 +44,39 @@
         background-color: dodgerBlue;
         transition: background-color 1s;
       }
+
+      /*square styling*/ 
+
+      #container > section {
+        background-color: tomato;
+        width: 75px;
+        height: 75px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #container > section > span {
+        background-color: cornSilk;
+        padding: 0.5rem;
+      }
+
+      #container > section.blue {
+        background-color: dodgerBlue;
+        transition: background-color 1s;
+      }
+
+      /*end square styling*/
+
+
     </style>
     <title>Shape Generator</title>
   </head>
   <body>
     <h1>
       <a href='index.html'>Shape Generator</a>
-      <div>`${count}`</div>
+      <div id='count'></div>
+      <div id='avg'></div>
     </h1>
     <h2>Todos</h2>
     <ul>
@@ -71,7 +97,7 @@
     </ul>
     <a href='https://github.com/FullstackAcademy/shape-generator'>Repo</a>
     <form>
-      <input name='px' value='25'/>
+      <input type='number' name='px' max='250' min='25'/>
     </form>
     <div id='container'>
     </div>
@@ -81,68 +107,113 @@
       const link = document.querySelector('a');
       const container = document.querySelector('#container');
       let count = 0;
+      let totalSize = 0;
 
-
-      // container.addEventListener('click', (ev)=>{
-
-      //   if(!ev.target.id){
-      //     if(ev.target.tagName ==='SPAN'){
-      //     ev.target.parentNode.remove();
-      //   }
-      //     ev.target.parentNode.removeChild(ev.target);
-      //   }
-      // });
 
       container.addEventListener('click', (ev)=>{
         if(!ev.target.id){
-          if (ev.target.tagName === 'SPAN') {
-            // sizeCounter -= (ev.target.innerText * 1)
-            let divToRemv = ev.target.parentNode;
-            divToRemv.parentNode.removeChild(divToRemv);
-          } else {
-            // sizeCounter -= (ev.target.childNodes[0].innerText * 1)
-            ev.target.parentNode.removeChild(ev.target);
-          }
+          ev.target.parentNode.remove();
+          
+          /*update count once circle being removed*/
+          count--;
+          const countTag = document.querySelector("#count")
+          countTag.innerText = ` There are ${count} circles`;
+        
+          /*update average once circle being removed*/
+
+          // console.log('currentTotal size', totalSize);
+          // console.log(ev.target.innerText);
+
+          let sizetoRemove = Number(ev.target.innerText); 
+          totalSize -= sizetoRemove;
+          // console.log ('removed newtotalSize', totalSize);
+
+          let average = Math.floor(totalSize / count);
+          // console.log('average', average);
+          const avgTag = document.querySelector('#avg');
+          avgTag.innerText = `The average size is ${average}`;
+
         }
-      }
+      });
 
       // container.addEventListener('click', (ev)=>{
       //   if(ev.target.tagName === 'SPAN'){
       //     let divToRemove = ev.target.parentNode;
       //     const newDiv = document.createElement('div');
       //     const child = [...divToRemove.children];
+      //     divToRemove.remove();
       //     newDiv.appendChild(child); 
       //     container.appendChild(newDiv);
       //       //  [...divToRemove.children].forEach((child) => {
       //       //   newDiv.appendChild(child); 
       //       //   container.appendChild(newDiv);
       //       //  })
-      //       divToRemove.remove();
       //     } 
       // });
 
       const generateCircle = ()=> {
+
+
+        /*update count*/
+        count++;
+        // console.log('count', count)
+        const countTag = document.querySelector("#count")
+        console.log("count Tag", countTag.innerText); 
+        // console.log(heading.innerHTML);
+        countTag.innerText = ` There are ${count} circles`;
+
+
+        /*update average size*/
         const size = `${input.value}px`;
+        totalSize += Number(input.value);
+        // console.log(totalSize);
+        let average = Math.floor(totalSize / count);
+        // console.log('average', average);
+        const avgTag = document.querySelector('#avg');
+        avgTag.innerText = `The average size is ${average}`;
+
         const circle = document.createElement('div');
         circle.style.width = size;
         circle.style.height = size;
         container.appendChild(circle);
+
         const span = document.createElement('span');
-        // if (RegExp.test(input.value)){
         span.innerText = input.value;
         circle.appendChild(span);
-        input.value = Math.floor(Math.random() * (250 - 25) + 25) ;
-        /* restrict input limit*/
-      // }
+
+        input.value = 25 + Math.floor(Math.random()*50);
         window.setTimeout(function(){
           circle.classList.add('blue');
         }, 500);
       };
 
+      const generateSquare = () => {
+        
+        const size = `${input.value}px`;
+        const square = document.createElement('section');
+        square.style.width = size;
+        square.style.height = size;
+        container.appendChild(square);
+
+        const span = document.createElement('span');
+        span.innerText = input.value;
+        square.appendChild(span);
+
+        input.value = 25 + Math.floor(Math.random()*50);
+        window.setTimeout(function(){
+          square.classList.add('blue');
+        }, 500);
+      }
+
       form.addEventListener('submit', (ev)=> {
         ev.preventDefault();
-        count++;
-        generateCircle();
+        let random = Math.floor(Math.random() * 100); 
+        // console.log("random", random)
+        if (random % 2 === 0){
+          generateCircle();
+        }else{
+          generateSquare(); 
+        }
       });
 
       generateCircle();
