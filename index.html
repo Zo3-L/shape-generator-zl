@@ -48,7 +48,10 @@
     <title>Shape Generator</title>
   </head>
   <body>
-    <h1><a href='index.html'>Shape Generator</a></h1>
+    <h1>
+      <a href='index.html'>Shape Generator</a>
+      <div>`${count}`</div>
+    </h1>
     <h2>Todos</h2>
     <ul>
       <li>Create a repo named shape-generator and add this index.html page</li>
@@ -77,12 +80,46 @@
       const input = form.querySelector('input');
       const link = document.querySelector('a');
       const container = document.querySelector('#container');
+      let count = 0;
+
+
+      // container.addEventListener('click', (ev)=>{
+
+      //   if(!ev.target.id){
+      //     if(ev.target.tagName ==='SPAN'){
+      //     ev.target.parentNode.remove();
+      //   }
+      //     ev.target.parentNode.removeChild(ev.target);
+      //   }
+      // });
 
       container.addEventListener('click', (ev)=>{
         if(!ev.target.id){
-          ev.target.parentNode.removeChild(ev.target);
+          if (ev.target.tagName === 'SPAN') {
+            // sizeCounter -= (ev.target.innerText * 1)
+            let divToRemv = ev.target.parentNode;
+            divToRemv.parentNode.removeChild(divToRemv);
+          } else {
+            // sizeCounter -= (ev.target.childNodes[0].innerText * 1)
+            ev.target.parentNode.removeChild(ev.target);
+          }
         }
-      });
+      }
+
+      // container.addEventListener('click', (ev)=>{
+      //   if(ev.target.tagName === 'SPAN'){
+      //     let divToRemove = ev.target.parentNode;
+      //     const newDiv = document.createElement('div');
+      //     const child = [...divToRemove.children];
+      //     newDiv.appendChild(child); 
+      //     container.appendChild(newDiv);
+      //       //  [...divToRemove.children].forEach((child) => {
+      //       //   newDiv.appendChild(child); 
+      //       //   container.appendChild(newDiv);
+      //       //  })
+      //       divToRemove.remove();
+      //     } 
+      // });
 
       const generateCircle = ()=> {
         const size = `${input.value}px`;
@@ -91,9 +128,12 @@
         circle.style.height = size;
         container.appendChild(circle);
         const span = document.createElement('span');
+        // if (RegExp.test(input.value)){
         span.innerText = input.value;
         circle.appendChild(span);
-        input.value = 25 + Math.floor(Math.random()*50);
+        input.value = Math.floor(Math.random() * (250 - 25) + 25) ;
+        /* restrict input limit*/
+      // }
         window.setTimeout(function(){
           circle.classList.add('blue');
         }, 500);
@@ -101,6 +141,7 @@
 
       form.addEventListener('submit', (ev)=> {
         ev.preventDefault();
+        count++;
         generateCircle();
       });
 
